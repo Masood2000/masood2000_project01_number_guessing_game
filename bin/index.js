@@ -1,19 +1,17 @@
 #! /usr/bin/env node
 import chalk from "chalk";
-import inquirer from "inquirer";
+import PromptSync from "prompt-sync";
+let input = PromptSync();
 console.log(" ...................... Wellcome to the Number Guessing Game ................................");
-let randomNumber = Math.floor(Math.random() * 10);
 let score = 0;
-async function playMatch() {
-    await inquirer.prompt([{
-            type: "number",
-            name: "Question",
-            message: `Please guess any number between 1 and 10...      Your Score is : ${score} `
-        },
-    ]).then((answers) => {
-        if (answers.Question == randomNumber) {
+function playMatch() {
+    let randomNumber = Math.floor(Math.random() * 10);
+    while (true) {
+        let num = parseInt(input(`Please guess any number between 1 and 10...      Your Score is : ${score} `));
+        if (num == randomNumber) {
             console.log(chalk.green("Your Guess is Right. Number to be Guessed is", randomNumber));
             score = score + 10;
+            break;
         }
         else {
             console.log(chalk.red("Sorry, Your Guess in not Right. Please Try Again "));
@@ -24,18 +22,15 @@ async function playMatch() {
                 score = score - 1;
             }
         }
-    });
+    }
 }
 async function againPlayMatch() {
+    let ans;
     do {
-        await playMatch();
+        playMatch();
         console.log("\n");
-        var option = await inquirer.prompt([{
-                type: "input",
-                message: chalk.green("Press Y to Play Again .........."),
-                name: "question",
-            }]);
-    } while (option.question == "y" || option.question == "Y" || option.question == "YES" || option.question == "yes" || option.question == "Yes");
+        ans = input(chalk.green("Press Y to Play Again .........."));
+    } while (ans == "y" || ans == "Y" || ans == "YES" || ans == "yes" || ans == "Yes");
 }
 ;
 againPlayMatch();
